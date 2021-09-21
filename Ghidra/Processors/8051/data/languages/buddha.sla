@@ -1,4 +1,4 @@
-<sleigh version="3" bigendian="true" align="1" uniqbase="0x9580">
+<sleigh version="3" bigendian="true" align="1" uniqbase="0x9500">
 <sourcefiles>
 <sourcefile name="8051_main.sinc" index="0"/>
 <sourcefile name="buddha.sinc" index="1"/>
@@ -13,7 +13,7 @@
 <space name="BITS" index="7" bigendian="true" delay="1" size="1" physical="true"/>
 <space name="register" index="8" bigendian="true" delay="0" size="1" physical="true"/>
 </spaces>
-<symbol_table scopesize="157" symbolsize="420">
+<symbol_table scopesize="157" symbolsize="421">
 <scope id="0x0" parent="0x0"/>
 <scope id="0x1" parent="0x0"/>
 <scope id="0x2" parent="0x0"/>
@@ -580,17 +580,18 @@
 <operand_sym_head name="Areg" id="0x196" scope="0x98"/>
 <operand_sym_head name="Direct" id="0x197" scope="0x99"/>
 <operand_sym_head name="Data" id="0x198" scope="0x99"/>
-<varlist_sym_head name="loreg" id="0x199" scope="0x0"/>
-<varlist_sym_head name="hireg" id="0x19a" scope="0x0"/>
+<varlist_sym_head name="rightreg" id="0x199" scope="0x0"/>
+<varlist_sym_head name="leftreg" id="0x19a" scope="0x0"/>
 <value_sym_head name="hiop" id="0x19b" scope="0x0"/>
-<operand_sym_head name="oplo" id="0x19c" scope="0x9a"/>
-<operand_sym_head name="hiop" id="0x19d" scope="0x9a"/>
-<operand_sym_head name="hireg" id="0x19e" scope="0x9a"/>
-<operand_sym_head name="loreg" id="0x19f" scope="0x9a"/>
-<operand_sym_head name="hireg" id="0x1a0" scope="0x9b"/>
-<operand_sym_head name="loreg" id="0x1a1" scope="0x9b"/>
-<operand_sym_head name="hireg" id="0x1a2" scope="0x9c"/>
-<operand_sym_head name="loreg" id="0x1a3" scope="0x9c"/>
+<operand_sym_head name="leftreg" id="0x19c" scope="0x9a"/>
+<operand_sym_head name="rightreg" id="0x19d" scope="0x9a"/>
+<operand_sym_head name="oplo" id="0x19e" scope="0x9a"/>
+<operand_sym_head name="hiop" id="0x19f" scope="0x9a"/>
+<operand_sym_head name="leftreg" id="0x1a0" scope="0x9b"/>
+<operand_sym_head name="rightreg" id="0x1a1" scope="0x9b"/>
+<operand_sym_head name="leftreg" id="0x1a2" scope="0x9c"/>
+<operand_sym_head name="rightreg" id="0x1a3" scope="0x9c"/>
+<operand_sym_head name="hiop" id="0x1a4" scope="0x9c"/>
 <subtable_sym name="instruction" id="0x0" scope="0x0" numct="126">
 <constructor parent="0x0" first="1" length="2" line="0:652">
 <oper id="0x9c"/>
@@ -4469,22 +4470,16 @@
 </construct_tpl>
 </constructor>
 <constructor parent="0x0" first="1" length="3" line="1:12">
-<oper id="0x19c"/>
-<oper id="0x19d"/>
-<oper id="0x19f"/>
 <oper id="0x19e"/>
+<oper id="0x19f"/>
+<oper id="0x19d"/>
+<oper id="0x19c"/>
 <print piece="XXX3"/>
 <print piece=" "/>
-<print piece="oplo="/>
-<opprint id="0"/>
-<print piece=" "/>
-<print piece="hiop="/>
-<opprint id="1"/>
-<print piece=" "/>
-<print piece="hi="/>
+<print piece="left="/>
 <opprint id="3"/>
 <print piece=" "/>
-<print piece="lo="/>
+<print piece="right="/>
 <opprint id="2"/>
 <construct_tpl>
 <null/><op_tpl code="CALLOTHER"><null/>
@@ -4495,29 +4490,78 @@
 <constructor parent="0x0" first="1" length="2" line="1:18">
 <oper id="0x1a1"/>
 <oper id="0x1a0"/>
-<print piece="CMP16"/>
+<print piece="SUB16"/>
 <print piece=" "/>
 <opprint id="1"/>
 <print piece=","/>
 <print piece=" "/>
 <opprint id="0"/>
 <construct_tpl>
-<null/><op_tpl code="INT_EQUAL"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x9500"/><const_tpl type="real" val="0x1"/></varnode_tpl>
-<varnode_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/></varnode_tpl>
+<null/><op_tpl code="INT_AND"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x200"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0xffffffffffffff7f"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_LESS"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x180"/><const_tpl type="real" val="0x1"/></varnode_tpl>
 <varnode_tpl><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_LEFT"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x280"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x180"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x7"/><const_tpl type="real" val="0x4"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_OR"><varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x200"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x280"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_SUB"><varnode_tpl><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="0" s="space"/><const_tpl type="handle" val="0" s="offset"/><const_tpl type="handle" val="0" s="size"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_AND"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x500"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0xffffffffffffffdf"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_SLESS"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x480"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x0"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_LEFT"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x580"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x480"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x5"/><const_tpl type="real" val="0x4"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_OR"><varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x500"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x580"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_AND"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x680"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0xfffffffffffffffd"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_EQUAL"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x600"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="handle" val="1" s="space"/><const_tpl type="handle" val="1" s="offset"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x0"/><const_tpl type="handle" val="1" s="size"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_LEFT"><varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x700"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x600"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x1"/><const_tpl type="real" val="0x4"/></varnode_tpl>
+</op_tpl>
+<op_tpl code="INT_OR"><varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x48"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x680"/><const_tpl type="real" val="0x1"/></varnode_tpl>
+<varnode_tpl><const_tpl type="spaceid" name="unique"/><const_tpl type="real" val="0x700"/><const_tpl type="real" val="0x1"/></varnode_tpl>
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:24">
+<constructor parent="0x0" first="1" length="2" line="1:26">
+<oper id="0x1a4"/>
 <oper id="0x1a3"/>
 <oper id="0x1a2"/>
 <print piece="XXX2"/>
 <print piece=" "/>
-<print piece="hi="/>
-<opprint id="1"/>
+<print piece="left="/>
+<opprint id="2"/>
 <print piece=" "/>
-<print piece="lo="/>
-<opprint id="0"/>
+<print piece="right="/>
+<opprint id="1"/>
 <construct_tpl>
 <null/><op_tpl code="CALLOTHER"><null/>
 <varnode_tpl><const_tpl type="spaceid" name="const"/><const_tpl type="real" val="0x1"/><const_tpl type="real" val="0x4"/></varnode_tpl>
@@ -9829,14 +9873,14 @@
 <operand_sym name="Data" id="0x198" scope="0x99" subsym="0x67" off="2" base="-1" minlen="1" index="1">
 <operand_exp index="1" table="0x0" ct="0x7a"/>
 </operand_sym>
-<varlist_sym name="loreg" id="0x199" scope="0x0">
+<varlist_sym name="rightreg" id="0x199" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="1" bytestart="0" byteend="0" shift="0"/>
 <var id="0x10"/>
 <var id="0x11"/>
 <var id="0x12"/>
 <var id="0x13"/>
 </varlist_sym>
-<varlist_sym name="hireg" id="0x19a" scope="0x0">
+<varlist_sym name="leftreg" id="0x19a" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="2" bitend="3" bytestart="0" byteend="0" shift="2"/>
 <var id="0x10"/>
 <var id="0x11"/>
@@ -9846,31 +9890,35 @@
 <value_sym name="hiop" id="0x19b" scope="0x0">
 <tokenfield bigendian="true" signbit="false" bitstart="4" bitend="7" bytestart="0" byteend="0" shift="4"/>
 </value_sym>
-<operand_sym name="oplo" id="0x19c" scope="0x9a" off="1" base="-1" minlen="1" index="0">
+<operand_sym name="leftreg" id="0x19c" scope="0x9a" subsym="0x19a" off="2" base="-1" minlen="1" index="3">
+<operand_exp index="3" table="0x0" ct="0x7b"/>
+</operand_sym>
+<operand_sym name="rightreg" id="0x19d" scope="0x9a" subsym="0x199" off="2" base="-1" minlen="1" index="2">
+<operand_exp index="2" table="0x0" ct="0x7b"/>
+</operand_sym>
+<operand_sym name="oplo" id="0x19e" scope="0x9a" off="1" base="-1" minlen="1" index="0">
 <operand_exp index="0" table="0x0" ct="0x7b"/>
 <tokenfield bigendian="true" signbit="false" bitstart="0" bitend="3" bytestart="0" byteend="0" shift="0"/>
 </operand_sym>
-<operand_sym name="hiop" id="0x19d" scope="0x9a" off="2" base="-1" minlen="1" index="1">
+<operand_sym name="hiop" id="0x19f" scope="0x9a" off="2" base="-1" minlen="1" index="1">
 <operand_exp index="1" table="0x0" ct="0x7b"/>
 <tokenfield bigendian="true" signbit="false" bitstart="4" bitend="7" bytestart="0" byteend="0" shift="4"/>
 </operand_sym>
-<operand_sym name="hireg" id="0x19e" scope="0x9a" subsym="0x19a" off="2" base="-1" minlen="1" index="3">
-<operand_exp index="3" table="0x0" ct="0x7b"/>
-</operand_sym>
-<operand_sym name="loreg" id="0x19f" scope="0x9a" subsym="0x199" off="2" base="-1" minlen="1" index="2">
-<operand_exp index="2" table="0x0" ct="0x7b"/>
-</operand_sym>
-<operand_sym name="hireg" id="0x1a0" scope="0x9b" subsym="0x19a" off="1" base="-1" minlen="1" index="1">
+<operand_sym name="leftreg" id="0x1a0" scope="0x9b" subsym="0x19a" off="1" base="-1" minlen="1" index="1">
 <operand_exp index="1" table="0x0" ct="0x7c"/>
 </operand_sym>
-<operand_sym name="loreg" id="0x1a1" scope="0x9b" subsym="0x199" off="1" base="-1" minlen="1" index="0">
+<operand_sym name="rightreg" id="0x1a1" scope="0x9b" subsym="0x199" off="1" base="-1" minlen="1" index="0">
 <operand_exp index="0" table="0x0" ct="0x7c"/>
 </operand_sym>
-<operand_sym name="hireg" id="0x1a2" scope="0x9c" subsym="0x19a" off="1" base="-1" minlen="1" index="1">
+<operand_sym name="leftreg" id="0x1a2" scope="0x9c" subsym="0x19a" off="1" base="-1" minlen="1" index="2">
+<operand_exp index="2" table="0x0" ct="0x7d"/>
+</operand_sym>
+<operand_sym name="rightreg" id="0x1a3" scope="0x9c" subsym="0x199" off="1" base="-1" minlen="1" index="1">
 <operand_exp index="1" table="0x0" ct="0x7d"/>
 </operand_sym>
-<operand_sym name="loreg" id="0x1a3" scope="0x9c" subsym="0x199" off="1" base="-1" minlen="1" index="0">
+<operand_sym name="hiop" id="0x1a4" scope="0x9c" off="1" base="-1" minlen="1" index="0">
 <operand_exp index="0" table="0x0" ct="0x7d"/>
+<tokenfield bigendian="true" signbit="false" bitstart="4" bitend="7" bytestart="0" byteend="0" shift="4"/>
 </operand_sym>
 </symbol_table>
 </sleigh>

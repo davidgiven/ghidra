@@ -2,27 +2,29 @@
 # complicating the main 8051 file.
 
 define token ExtendedOp2 (8)
-	loreg = (0,1)
-	hireg = (2,3)
+	rightreg = (0,1)
+	leftreg = (2,3)
 	hiop = (4,7)
 ;
 
-attach variables [ loreg hireg ] [ R0R1 R2R3 R4R5 R6R7 ];
+attach variables [ rightreg leftreg ] [ R0R1 R2R3 R4R5 R6R7 ];
 
-:XXX3 "oplo="^oplo "hiop="^hiop "hi="^hireg "lo="^loreg
-	is opfull=0xa5; ophi=0 & oplo; hiop & loreg & hireg
+:XXX3 "left="^leftreg "right="^rightreg
+	is opfull=0xa5; ophi=0 & oplo; hiop & rightreg & leftreg
 { 
 	nop();
 }
 
-:CMP16 hireg, loreg
-	is opfull=0xa5; hiop=0x6 & loreg & hireg
+:SUB16 leftreg, rightreg
+	is opfull=0xa5; hiop=0x6 & rightreg & leftreg
 {
-	Z = (loreg == hireg);
+	subflags(leftreg, rightreg);
+	leftreg = leftreg - rightreg;
+	resultflags(leftreg);
 }
 	
-:XXX2 "hi="^hireg "lo="^loreg
-	is opfull=0xa5; hiop!=0 & hiop!=0x6 & loreg & hireg
+:XXX2 "left="^leftreg "right="^rightreg
+	is opfull=0xa5; hiop!=0 & hiop!=0x6 & hiop & rightreg & leftreg
 {
 	nop();
 }
