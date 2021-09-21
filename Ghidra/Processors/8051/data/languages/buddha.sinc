@@ -1,14 +1,28 @@
 # Extended instructions live here, so as to avoid further
 # complicating the main 8051 file.
 
-# All have 0xa5 as prefix, so subtract one
-define token TwoByteOp (8)
-  b2op = (0,7)
-;
-define token ThreeByteOp (16)
-  b3op = (8,15)
-;
-define token FourByteOp (24)
-  b4op = (16,23)
+define token ExtendedOp2 (8)
+	loreg = (0,1)
+	hireg = (2,3)
+	hiop = (4,7)
 ;
 
+attach variables [ loreg hireg ] [ R0R1 R2R3 R4R5 R6R7 ];
+
+:XXX3 "oplo="^oplo "hiop="^hiop "hi="^hireg "lo="^loreg
+	is opfull=0xa5; ophi=0 & oplo; hiop & loreg & hireg
+{ 
+	nop();
+}
+
+:CMP16 hireg, loreg
+	is opfull=0xa5; hiop=0x6 & loreg & hireg
+{
+	Z = (loreg == hireg);
+}
+	
+:XXX2 "hi="^hireg "lo="^loreg
+	is opfull=0xa5; hiop!=0 & hiop!=0x6 & loreg & hireg
+{
+	nop();
+}
