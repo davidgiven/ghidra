@@ -200,6 +200,16 @@ define context contextReg
 
 @endif
 
+@if defined(WITH_DPS)
+define register offset=$(DPS_REG_NUM) size=1 [ DPS ];
+
+macro updateDptr()
+{
+	DPTR = DPTR + zext(DPS[4,1]);
+}
+
+@endif
+
 define pcodeop decimal_adjust;
 define pcodeop nop;
 
@@ -652,6 +662,10 @@ Rel16:   relAddr is rel16		     [ relAddr=inst_next+rel16; ] { export *:1 relAdd
 :ACALL  Addr11 is  $(GROUP1) & aaddrfill=1 & aoplo=1 & Addr11   { ret:2 = inst_next; push16(ret); call Addr11; }
 @endif
 
+@if defined(WITH_DPS)
+Direct: DPS is direct=$(DPS_REG_NUM) & DPS { export DPS; }
+@endif
+
 :ADD Areg,rn      is $(GROUP2) & ophi=2          & Areg & rnfill=1 & rn 	 { addflags(ACC,rn); ACC = ACC + rn; resultflags(ACC); }
 :ADD Areg,Direct  is $(GROUP1) & ophi=2 & oplo=5 & Areg; Direct  { addflags(ACC,Direct); ACC = ACC + Direct; resultflags(ACC); }
 :ADD Areg,Ri      is $(GROUP2) & ophi=2          & Areg & rifill=3 & Ri	 { addflags(ACC,Ri); ACC = ACC + Ri; resultflags(ACC); }
@@ -819,13 +833,15 @@ Rel16:   relAddr is rel16		     [ relAddr=inst_next+rel16; ] { export *:1 relAdd
 :MOV BitAddr,CY is $(GROUP1) & CY & ophi=9  & oplo=2;  BitAddr & sfrbit & BitByteAddr { BitByteAddr = BitByteAddr & (~(1<<sfrbit)); BitByteAddr = BitByteAddr | ($(CY)<<sfrbit); }
 @endif
 
-:MOVC  Areg,ADPTR is $(GROUP1) & ophi=9 & oplo=3 & ADPTR & Areg		{ ACC = *:1 ADPTR; }
+@if defined(WITH_DPS)
+:MOVC  Areg,ADPTR is $(GROUP1) & ophi=9 & oplo=3 & ADPTR & Areg		{ ACC = *:1 ADPTR; updateDptr(); }
+:MOVX  Areg,ATDPTR  is $(GROUP1) & ophi=14 & oplo=0 & Areg & ATDPTR	{ ACC = ATDPTR; updateDptr(); }
+:MOVX  ATDPTR,Areg  is $(GROUP1) & ophi=15 & oplo=0 & Areg & ATDPTR	{ ATDPTR = ACC; updateDptr(); }
+@else
 :MOVC  Areg,APC   is $(GROUP1) & ophi=8 & oplo=3 & APC   & Areg		{ ACC = *:1 APC; }
-
 :MOVX  Areg,RiX     is $(GROUP2) & ophi=14 & rifill=1 & RiX & Areg	{ ACC = RiX; }
-:MOVX  Areg,ATDPTR  is $(GROUP1) & ophi=14 & oplo=0 & Areg & ATDPTR	{ ACC = ATDPTR; }
 :MOVX  RiX,Areg     is $(GROUP2) & ophi=15 & rifill=1 & RiX & Areg	{ RiX = ACC; }
-:MOVX  ATDPTR,Areg  is $(GROUP1) & ophi=15 & oplo=0 & Areg & ATDPTR	{ ATDPTR = ACC; }
+@endif
 
 :MUL ABreg         is $(GROUP1) & ophi=10 & oplo=4 & ABreg	   { PSW = PSW & 0x7b; tmp:2 = zext(ACC) * zext(B); ACC = tmp(0); B = tmp(1); PSW = PSW | ((B!=0)<<2); }
 #:MUL Areg,Breg   is $(GROUP1) & ophi=10 & oplo=4 & Areg & Breg { PSW = PSW & 0x7b; tmp:2 = zext(ACC) * zext(B); ACC = tmp(0); B = tmp(1); PSW = PSW | ((B!=0)<<2); }

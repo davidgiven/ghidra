@@ -18,9 +18,8 @@ attach variables [ rightreg leftreg ] [ R0R1 R2R3 R4R5 R6R7 ];
 :SUB16 leftreg, rightreg
 	is opfull=0xa5; hiop=0x6 & rightreg & leftreg
 {
-	subflags(leftreg, rightreg);
 	leftreg = leftreg - rightreg;
-	resultflags(leftreg);
+	UD = (leftreg == 0);
 }
 	
 :XXX2 "left="^leftreg "right="^rightreg
