@@ -2,6 +2,7 @@
 @define BUDDHA ""
 @define WITH_DPS ""
 @define DPS_REG_NUM "0x86"
+@define UNIFIED_ADDRESS_SPACE ""
 
 @include "8051_main.sinc"
 @include "buddha.sinc"

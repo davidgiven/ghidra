@@ -2,10 +2,9 @@
 
 <compiler_spec>
   <global>
-    <range space="CODE"/>
+    <range space="EXTMEM"/>
     <range space="INTMEM"/>
     <range space="SFR"/>
-    <range space="EXTMEM"/>
     <range space="BITS"/>
   </global>
   <stackpointer register="SP" space="INTMEM" growth="positive"/>

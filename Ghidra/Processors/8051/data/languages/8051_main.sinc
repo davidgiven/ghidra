@@ -47,9 +47,13 @@ define space BITS     type=ram_space      size=2;
 #
 @define SP_SIZE 1
 
+@if defined(UNIFIED_ADDRESS_SPACE)
+define space EXTMEM     type=ram_space      size=2 default;
+@else
 define space CODE     type=ram_space      size=$(PTRSIZE)  default;
-define space INTMEM   type=ram_space      size=1;
 define space EXTMEM   type=ram_space      size=2;
+@endif
+define space INTMEM   type=ram_space      size=1;
 define space SFR      type=ram_space      size=1;
 define space BITS     type=ram_space      size=1;
 
