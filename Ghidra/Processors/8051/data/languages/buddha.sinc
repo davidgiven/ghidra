@@ -2,28 +2,132 @@
 # complicating the main 8051 file.
 
 define token ExtendedOp2 (8)
-	rightreg = (0,1)
-	leftreg = (2,3)
-	hiop = (4,7)
+	# A format: opcode and two registers
+	
+	a_rr = (0,1)
+	a_rl = (2,3)
+	a_op = (4,7)
+
+	# B format: short opcode, single register, and split 4-bit constant
+	
+	b_constlo = (0,1)
+	b_rl = (2,3)
+	b_consthi = (4,5)
+	b_op = (6,7)
+
+	# C format: opcode and 3-bit constant
+	
+	c_const = (0,2)
+	c_op = (3,7)
+
+	# D format: opcode and single register
+	
+	d_rl = (0,1)
+	d_op = (2,7)
 ;
 
-attach variables [ rightreg leftreg ] [ R0R1 R2R3 R4R5 R6R7 ];
+B_const: tmp is b_constlo & b_consthi [ tmp = (b_consthi<<2) | b_constlo; ] { export tmp; }
 
-:XXX3 "left="^leftreg "right="^rightreg
-	is opfull=0xa5; ophi=0 & oplo; hiop & rightreg & leftreg
-{ 
-	nop();
-}
+attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 
-:SUB16 leftreg, rightreg
-	is opfull=0xa5; hiop=0x6 & rightreg & leftreg
-{
-	leftreg = leftreg - rightreg;
-	UD = (leftreg == 0);
-}
-	
-:XXX2 "left="^leftreg "right="^rightreg
-	is opfull=0xa5; hiop!=0 & hiop!=0x6 & hiop & rightreg & leftreg
-{
-	nop();
-}
+:ADD16 a_rl, a_rr      is opfull=0xa5; opfull=0x00; a_op=0x0 & a_rl & a_rr    { a_rl = a_rl + a_rr; }
+:ADD16 a_rl, @a_rr     is opfull=0xa5; opfull=0x00; a_op=0x1 & a_rl & a_rr    { a_rl = a_rl + *:2 a_rr; }
+:ADD16 @a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x2 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl + a_rr; }
+
+:ADDC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x3 & a_rl & a_rr    { nop(); }
+:ADDC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x00; a_op=0x4 & a_rl & a_rr    { nop(); }
+:ADDC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x00; a_op=0x5 & a_rl & a_rr    { nop(); }
+
+:ADD16S a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x6 & a_rl & a_rr    { nop(); }
+:ADD16S a_rl, @a_rr    is opfull=0xa5; opfull=0x00; a_op=0x7 & a_rl & a_rr    { nop(); }
+:ADD16S @a_rl, a_rr    is opfull=0xa5; opfull=0x00; a_op=0x8 & a_rl & a_rr    { nop(); }
+
+:ADDC16S a_rl, a_rr    is opfull=0xa5; opfull=0x00; a_op=0x9 & a_rl & a_rr    { nop(); }
+:ADDC16S a_rl, @a_rr   is opfull=0xa5; opfull=0x00; a_op=0xa & a_rl & a_rr    { nop(); }
+:ADDC16S @a_rl, a_rr   is opfull=0xa5; opfull=0x00; a_op=0xb & a_rl & a_rr    { nop(); }
+
+:SUB16 a_rl, a_rr      is opfull=0xa5; opfull=0x00; a_op=0xc & a_rl & a_rr    { a_rl = a_rl - a_rr; }
+:SUB16 a_rl, @a_rr     is opfull=0xa5; opfull=0x00; a_op=0xd & a_rl & a_rr    { a_rl = a_rl - *:2 a_rr; }
+:SUB16 @a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0xe & a_rl & a_rr    { *:2 a_rl = *:2 a_rl - a_rr; }
+
+:SUBC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0xf & a_rl & a_rr    { nop(); }
+:SUBC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x01; a_op=0x0 & a_rl & a_rr    { nop(); }
+:SUBC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x01; a_op=0x1 & a_rl & a_rr    { nop(); }
+
+:SUB16S a_rl, a_rr     is opfull=0xa5; opfull=0x01; a_op=0x2 & a_rl & a_rr    { nop(); }
+:SUB16S a_rl, @a_rr    is opfull=0xa5; opfull=0x01; a_op=0x3 & a_rl & a_rr    { nop(); }
+:SUB16S @a_rl, a_rr    is opfull=0xa5; opfull=0x01; a_op=0x4 & a_rl & a_rr    { nop(); }
+
+:SUBC16S a_rl, a_rr    is opfull=0xa5; opfull=0x01; a_op=0x5 & a_rl & a_rr    { nop(); }
+:SUBC16S a_rl, @a_rr   is opfull=0xa5; opfull=0x01; a_op=0x6 & a_rl & a_rr    { nop(); }
+:SUBC16S @a_rl, a_rr   is opfull=0xa5; opfull=0x01; a_op=0x7 & a_rl & a_rr    { nop(); }
+
+:ANL16 a_rl, a_rr      is opfull=0xa5; opfull=0x01; a_op=0x8 & a_rl & a_rr    { a_rl = a_rl & a_rr; }
+:ANL16 a_rl, @a_rr     is opfull=0xa5; opfull=0x01; a_op=0x9 & a_rl & a_rr    { a_rl = a_rl & *:2 a_rr; }
+:ANL16 @a_rl, a_rr     is opfull=0xa5; opfull=0x01; a_op=0xa & a_rl & a_rr    { *:2 a_rl = *:2 a_rl & a_rr; }
+
+:ORL16 a_rl, a_rr      is opfull=0xa5; opfull=0x01; a_op=0xb & a_rl & a_rr    { a_rl = a_rl | a_rr; }
+:ORL16 a_rl, @a_rr     is opfull=0xa5; opfull=0x01; a_op=0xc & a_rl & a_rr    { a_rl = a_rl | *:2 a_rr; }
+:ORL16 @a_rl, a_rr     is opfull=0xa5; opfull=0x01; a_op=0xd & a_rl & a_rr    { *:2 a_rl = *:2 a_rl | a_rr; }
+
+:XRL16 a_rl, a_rr      is opfull=0xa5; opfull=0x01; a_op=0xe & a_rl & a_rr    { a_rl = a_rl ^ a_rr; }
+:XRL16 a_rl, @a_rr     is opfull=0xa5; opfull=0x01; a_op=0xf & a_rl & a_rr    { a_rl = a_rl ^ *:2 a_rr; }
+:XRL16 @a_rl, a_rr     is opfull=0xa5; opfull=0x02; a_op=0x0 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl ^ a_rr; }
+
+:MAC16 a_rl, a_rr      is opfull=0xa5; opfull=0x02; a_op=0x1 & a_rl & a_rr    { nop(); }
+:MAC16 a_rl, @a_rr     is opfull=0xa5; opfull=0x02; a_op=0x2 & a_rl & a_rr    { nop(); }
+
+:MAC16S a_rl, a_rr     is opfull=0xa5; opfull=0x02; a_op=0x3 & a_rl & a_rr    { nop(); }
+:MAC16S a_rl, @a_rr    is opfull=0xa5; opfull=0x02; a_op=0x4 & a_rl & a_rr    { nop(); }
+
+:MOV16B a_rl, @a_rr    is opfull=0xa5; opfull=0x02; a_op=0x5 & a_rl & a_rr    { a_rl = *:1 a_rr; }
+:MOV16B @a_rl, a_rr    is opfull=0xa5; opfull=0x02; a_op=0x6 & a_rl & a_rr    { *:1 a_rl = a_rr; }
+
+:LSL16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x0 & b_rl & B_const { nop(); }
+:LSR16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x1 & b_rl & B_const { nop(); }
+:ROTL16 b_rl, #B_const is opfull=0xa5; opfull=0x03; b_op=0x2 & b_rl & B_const { nop(); }
+:ASRL16 b_rl, #B_const is opfull=0xa5; opfull=0x03; b_op=0x3 & b_rl & B_const { nop(); }
+
+:ROTL8                 is opfull=0xa5; opfull=0x04                            { nop(); }
+:ROTR8                 is opfull=0xa5; opfull=0x05                            { nop(); }
+
+:ROTL8 #c_const        is opfull=0xa5; c_op=1 & c_const                       { nop(); }
+
+:INC16 d_rl            is opfull=0xa5; d_op=0x04 & d_rl                       { d_rl = d_rl + 1; }
+:INC216 d_rl           is opfull=0xa5; d_op=0x05 & d_rl                       { d_rl = d_rl + 2; }
+:DEC16 d_rl            is opfull=0xa5; d_op=0x06 & d_rl                       { d_rl = d_rl - 1; }
+:DEC216 d_rl           is opfull=0xa5; d_op=0x07 & d_rl                       { d_rl = d_rl - 2; }
+                                                                       
+:ROTL16 d_rl           is opfull=0xa5; d_op=0x08 & d_rl                       { nop(); }
+:ROTR16 d_rl           is opfull=0xa5; d_op=0x09 & d_rl                       { nop(); }
+:ROTL16 @d_rl          is opfull=0xa5; d_op=0x0a & d_rl                       { nop(); }
+:ROTR16 @d_rl          is opfull=0xa5; d_op=0x0b & d_rl                       { nop(); }
+                                                                       
+:LSR16 d_rl            is opfull=0xa5; d_op=0x0c & d_rl                       { nop(); }
+:LSL16 d_rl            is opfull=0xa5; d_op=0x0d & d_rl                       { nop(); }
+:LSR16 @d_rl           is opfull=0xa5; d_op=0x0e & d_rl                       { nop(); }
+:LSL16 @d_rl           is opfull=0xa5; d_op=0x0f & d_rl                       { nop(); }
+:ASR16 d_rl            is opfull=0xa5; d_op=0x10 & d_rl                       { nop(); }
+:ASR16 @d_rl           is opfull=0xa5; d_op=0x11 & d_rl                       { nop(); }
+                                                                       
+:MOVSA d_rl            is opfull=0xa5; d_op=0x12 & d_rl                       { nop(); }
+:MOVSB d_rl            is opfull=0xa5; d_op=0x13 & d_rl                       { nop(); }
+                                                                       
+                                                                       
+:CMP16 a_rl, a_rr      is opfull=0xa5; a_op=0x6 & a_rr & a_rl                 { tmp = a_rl - a_rr; UD = (tmp == 0); }
+                                                                       
+:MOV16 a_rl, a_rr      is opfull=0xa5; a_op=0x8 & a_rr & a_rl                 { a_rl = a_rr; }
+:MOV16 @a_rl, a_rr     is opfull=0xa5; a_op=0x9 & a_rr & a_rl                 { *:2 a_rl = a_rr; }
+:MOV16 a_rl, @a_rr     is opfull=0xa5; a_op=0xa & a_rr & a_rl                 { a_rl = *:2 a_rr; }
+:MOV16 @a_rl, @a_rr    is opfull=0xa5; a_op=0xb & a_rr & a_rl                 { *:2 a_rl = *:2 a_rr; }
+
+:MUL16 a_rl, a_rr      is opfull=0xa5; a_op=0xc & a_rr & a_rl                 { a_rl = a_rl * a_rr; }
+:MUL16 a_rl, @a_rr     is opfull=0xa5; a_op=0xd & a_rr & a_rl                 { a_rl = a_rl * *:2 a_rr; }
+
+:MUL16S a_rl, a_rr     is opfull=0xa5; a_op=0xe & a_rr & a_rl                 { nop(); }
+:MUL16S a_rl, @a_rr    is opfull=0xa5; a_op=0xf & a_rr & a_rl                 { nop(); }
+
+:MUL16WR               is opfull=0xa5; opfull=0x06                            { R4R5 = R4R5 * R2R3; }
+:MUL16SWR              is opfull=0xa5; opfull=0x07                            { nop(); }
+
+
