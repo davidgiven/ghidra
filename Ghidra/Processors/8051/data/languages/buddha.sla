@@ -5617,7 +5617,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:117">
+<constructor parent="0x0" first="1" length="2" line="1:116">
 <oper id="0x20a"/>
 <oper id="0x209"/>
 <print piece="CMP16"/>
@@ -5637,7 +5637,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:119">
+<constructor parent="0x0" first="1" length="2" line="1:118">
 <oper id="0x20c"/>
 <oper id="0x20b"/>
 <print piece="MOV16"/>
@@ -5652,7 +5652,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:120">
+<constructor parent="0x0" first="1" length="2" line="1:119">
 <oper id="0x20e"/>
 <oper id="0x20d"/>
 <print piece="MOV16"/>
@@ -5670,7 +5670,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:121">
+<constructor parent="0x0" first="1" length="2" line="1:120">
 <oper id="0x210"/>
 <oper id="0x20f"/>
 <print piece="MOV16"/>
@@ -5687,7 +5687,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:122">
+<constructor parent="0x0" first="1" length="2" line="1:121">
 <oper id="0x212"/>
 <oper id="0x211"/>
 <print piece="MOV16"/>
@@ -5710,7 +5710,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:124">
+<constructor parent="0x0" first="1" length="2" line="1:123">
 <oper id="0x214"/>
 <oper id="0x213"/>
 <print piece="MUL16"/>
@@ -5726,7 +5726,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:125">
+<constructor parent="0x0" first="1" length="2" line="1:124">
 <oper id="0x216"/>
 <oper id="0x215"/>
 <print piece="MUL16"/>
@@ -5747,7 +5747,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:127">
+<constructor parent="0x0" first="1" length="2" line="1:126">
 <oper id="0x218"/>
 <oper id="0x217"/>
 <print piece="MUL16S"/>
@@ -5762,7 +5762,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:128">
+<constructor parent="0x0" first="1" length="2" line="1:127">
 <oper id="0x21a"/>
 <oper id="0x219"/>
 <print piece="MUL16S"/>
@@ -5778,7 +5778,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:130">
+<constructor parent="0x0" first="1" length="2" line="1:129">
 <print piece="MUL16WR"/>
 <construct_tpl>
 <null/><op_tpl code="INT_MULT"><varnode_tpl><const_tpl type="spaceid" name="register"/><const_tpl type="real" val="0x4"/><const_tpl type="real" val="0x2"/></varnode_tpl>
@@ -5787,7 +5787,7 @@
 </op_tpl>
 </construct_tpl>
 </constructor>
-<constructor parent="0x0" first="1" length="2" line="1:131">
+<constructor parent="0x0" first="1" length="2" line="1:130">
 <print piece="MUL16SWR"/>
 <construct_tpl>
 <null/><op_tpl code="CALLOTHER"><null/>

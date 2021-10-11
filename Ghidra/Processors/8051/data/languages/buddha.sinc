@@ -113,7 +113,6 @@ attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 :MOVSA d_rl            is opfull=0xa5; d_op=0x12 & d_rl                       { nop(); }
 :MOVSB d_rl            is opfull=0xa5; d_op=0x13 & d_rl                       { nop(); }
                                                                        
-                                                                       
 :CMP16 a_rl, a_rr      is opfull=0xa5; a_op=0x6 & a_rr & a_rl                 { tmp = a_rl - a_rr; UD = (tmp == 0); }
                                                                        
 :MOV16 a_rl, a_rr      is opfull=0xa5; a_op=0x8 & a_rr & a_rl                 { a_rl = a_rr; }
