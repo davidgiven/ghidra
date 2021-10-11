@@ -34,9 +34,9 @@ attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 :ADD16 a_rl, @a_rr     is opfull=0xa5; opfull=0x00; a_op=0x1 & a_rl & a_rr    { a_rl = a_rl + *:2 a_rr; }
 :ADD16 @a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x2 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl + a_rr; }
 
-:ADDC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x3 & a_rl & a_rr    { nop(); }
-:ADDC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x00; a_op=0x4 & a_rl & a_rr    { nop(); }
-:ADDC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x00; a_op=0x5 & a_rl & a_rr    { nop(); }
+:ADDC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x3 & a_rl & a_rr    { a_rl = a_rl + a_rr + zext($(CY)); }
+:ADDC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x00; a_op=0x4 & a_rl & a_rr    { a_rl = a_rl + *:2 a_rr + zext($(CY)); }
+:ADDC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x00; a_op=0x5 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl + a_rr + zext($(CY)); }
 
 :ADD16S a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0x6 & a_rl & a_rr    { nop(); }
 :ADD16S a_rl, @a_rr    is opfull=0xa5; opfull=0x00; a_op=0x7 & a_rl & a_rr    { nop(); }
@@ -50,9 +50,9 @@ attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 :SUB16 a_rl, @a_rr     is opfull=0xa5; opfull=0x00; a_op=0xd & a_rl & a_rr    { a_rl = a_rl - *:2 a_rr; }
 :SUB16 @a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0xe & a_rl & a_rr    { *:2 a_rl = *:2 a_rl - a_rr; }
 
-:SUBC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0xf & a_rl & a_rr    { nop(); }
-:SUBC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x01; a_op=0x0 & a_rl & a_rr    { nop(); }
-:SUBC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x01; a_op=0x1 & a_rl & a_rr    { nop(); }
+:SUBC16 a_rl, a_rr     is opfull=0xa5; opfull=0x00; a_op=0xf & a_rl & a_rr    { a_rl = a_rl - a_rr - zext($(CY)); }
+:SUBC16 a_rl, @a_rr    is opfull=0xa5; opfull=0x01; a_op=0x0 & a_rl & a_rr    { a_rl = a_rl - *:2 a_rr - zext($(CY)); }
+:SUBC16 @a_rl, a_rr    is opfull=0xa5; opfull=0x01; a_op=0x1 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl - a_rr - zext($(CY)); }
 
 :SUB16S a_rl, a_rr     is opfull=0xa5; opfull=0x01; a_op=0x2 & a_rl & a_rr    { nop(); }
 :SUB16S a_rl, @a_rr    is opfull=0xa5; opfull=0x01; a_op=0x3 & a_rl & a_rr    { nop(); }
@@ -74,8 +74,8 @@ attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 :XRL16 a_rl, @a_rr     is opfull=0xa5; opfull=0x01; a_op=0xf & a_rl & a_rr    { a_rl = a_rl ^ *:2 a_rr; }
 :XRL16 @a_rl, a_rr     is opfull=0xa5; opfull=0x02; a_op=0x0 & a_rl & a_rr    { *:2 a_rl = *:2 a_rl ^ a_rr; }
 
-:MAC16 a_rl, a_rr      is opfull=0xa5; opfull=0x02; a_op=0x1 & a_rl & a_rr    { nop(); }
-:MAC16 a_rl, @a_rr     is opfull=0xa5; opfull=0x02; a_op=0x2 & a_rl & a_rr    { nop(); }
+:MAC16 a_rl, a_rr      is opfull=0xa5; opfull=0x02; a_op=0x1 & a_rl & a_rr    { a_rl = a_rl + (a_rl * a_rr); }
+:MAC16 a_rl, @a_rr     is opfull=0xa5; opfull=0x02; a_op=0x2 & a_rl & a_rr    { a_rl = a_rl + (a_rl * *:2 a_rr); }
 
 :MAC16S a_rl, a_rr     is opfull=0xa5; opfull=0x02; a_op=0x3 & a_rl & a_rr    { nop(); }
 :MAC16S a_rl, @a_rr    is opfull=0xa5; opfull=0x02; a_op=0x4 & a_rl & a_rr    { nop(); }
@@ -83,8 +83,8 @@ attach variables [ a_rr a_rl b_rl d_rl ] [ R0R1 R2R3 R4R5 R6R7 ];
 :MOV16B a_rl, @a_rr    is opfull=0xa5; opfull=0x02; a_op=0x5 & a_rl & a_rr    { a_rl = *:1 a_rr; }
 :MOV16B @a_rl, a_rr    is opfull=0xa5; opfull=0x02; a_op=0x6 & a_rl & a_rr    { *:1 a_rl = a_rr; }
 
-:LSL16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x0 & b_rl & B_const { nop(); }
-:LSR16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x1 & b_rl & B_const { nop(); }
+:LSL16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x0 & b_rl & B_const { b_rl = b_rl << B_const; }
+:LSR16 b_rl, #B_const  is opfull=0xa5; opfull=0x03; b_op=0x1 & b_rl & B_const { b_rl = b_rl >> B_const; }
 :ROTL16 b_rl, #B_const is opfull=0xa5; opfull=0x03; b_op=0x2 & b_rl & B_const { nop(); }
 :ASRL16 b_rl, #B_const is opfull=0xa5; opfull=0x03; b_op=0x3 & b_rl & B_const { nop(); }
 
