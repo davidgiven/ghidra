@@ -21,8 +21,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
+//import com.formdev.flatlaf.FlatDarkLaf;
+//import com.formdev.flatlaf.FlatLightLaf;
 
 import generic.theme.laf.LookAndFeelManager;
 import ghidra.framework.Application;
@@ -376,8 +376,8 @@ public class ApplicationThemeManager extends ThemeManager {
 	}
 
 	private void installFlatLookAndFeels() {
-		UIManager.installLookAndFeel(LafType.FLAT_LIGHT.getName(), FlatLightLaf.class.getName());
-		UIManager.installLookAndFeel(LafType.FLAT_DARK.getName(), FlatDarkLaf.class.getName());
+		//UIManager.installLookAndFeel(LafType.FLAT_LIGHT.getName(), FlatLightLaf.class.getName());
+		//UIManager.installLookAndFeel(LafType.FLAT_DARK.getName(), FlatDarkLaf.class.getName());
 	}
 
 	@Override

@@ -110,7 +110,7 @@ public class SarifUtils {
 			AddressSpace base = af.getDefaultAddressSpace();
 
 			PhysicalLocation physicalLocation = location.getPhysicalLocation();
-			Long addr = physicalLocation.getAddress().getAbsoluteAddress();
+			Long addr = (long)physicalLocation.getAddress().getAbsoluteAddress();
 			String fqn = physicalLocation.getAddress().getFullyQualifiedName();
 			if (fqn == null) {
 				return longToAddress(base, addr);
