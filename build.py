@@ -185,7 +185,7 @@ ghidramodule("Features/MicrosoftDmang")
 ghidramodule("Features/PDB")
 ghidramodule("Features/ProgramDiff")
 ghidramodule("Features/ProgramGraph")
-#ghidramodule("Features/Python", deps=[".+jython"])
+# ghidramodule("Features/Python", deps=[".+jython"])
 ghidramodule("Features/Recognizers")
 ghidramodule("Features/Sarif", deps=[".+java-sarif-2.0"])
 ghidramodule("Features/SourceCodeLookup")
@@ -212,9 +212,7 @@ simplerule(
     label="ANTLR3",
 )
 
-proto(
-    name="isfproto", srcs=["Ghidra/Debug/Debugger-isf/src/main/proto/isf.proto"]
-)
+proto(name="isfproto", srcs=["Ghidra/Debug/Debugger-isf/src/main/proto/isf.proto"])
 protojava(name="isfprotojava", srcs=[".+isfproto"], deps=[".+protobuf"])
 
 
@@ -274,6 +272,12 @@ jj(
     src="Ghidra/Features/Base/src/main/javacc/ghidra/app/util/cparser/CPP/CPP.jj",
 )
 
+javaprogram(
+    name="sleigh",
+    mainclass="ghidra.pcodeCPort.slgh_compile.SleighCompile",
+    deps=[".+module-softwaremodeling"],
+)
+
 javaprogram(name="ghidra", mainclass="ghidra.GhidraRun", deps=list(allmodules.values()))
 
-export(name="all", items={"ghidra.jar": ".+ghidra"})
+export(name="all", items={"sleigh.jar": ".+sleigh", "ghidra.jar": ".+ghidra"})
