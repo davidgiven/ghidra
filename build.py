@@ -1,5 +1,13 @@
-from build.ab import export, simplerule, Rule, Target, Targets, filenameof
-from build.java import javalibrary, externaljar, srcjar, javaprogram
+from build.ab import (
+    export,
+    simplerule,
+    Rule,
+    Target,
+    Targets,
+    filenameof,
+    filenamesof,
+)
+from build.java import javalibrary, externaljar, javaprogram
 from build.utils import itemsof
 from build.protobuf import protojava, proto
 from os.path import *
@@ -81,7 +89,7 @@ def ghidramodule(root, deps=[]):
     m = javalibrary(
         name=depname,
         srcitems=itemsof(
-            pattern=join("Ghidra", root, "src/**/*.java"),
+            pattern=join("Ghidra", root, "src/main/**/*.java"),
             root=join("Ghidra", root, "src"),
         ),
         deps=deps + moduledeps,
@@ -212,7 +220,9 @@ simplerule(
     label="ANTLR3",
 )
 
-proto(name="isfproto", srcs=["Ghidra/Debug/Debugger-isf/src/main/proto/isf.proto"])
+proto(
+    name="isfproto", srcs=["Ghidra/Debug/Debugger-isf/src/main/proto/isf.proto"]
+)
 protojava(name="isfprotojava", srcs=[".+isfproto"], deps=[".+protobuf"])
 
 
@@ -278,6 +288,29 @@ javaprogram(
     deps=[".+module-softwaremodeling"],
 )
 
-javaprogram(name="ghidra", mainclass="ghidra.GhidraRun", deps=list(allmodules.values()))
+
+def ghidraprocessor(root, deps=[]):
+    slas = []
+    for sla in glob(f"Ghidra/Processors/{root}/data/languages/*.slaspec"):
+        (n, _) = splitext(basename(sla))
+        s = simplerule(
+            name=n + "_sla",
+            ins=[".+sleigh", sla] + glob(basename(sla) + "/*.sla"),
+            outs=[f"={n}.sla"],
+            commands=["java -jar {ins[0]} {ins[1]} {outs[0]}"],
+            label="SLEIGH",
+        )
+        slas += [s]
+
+    ghidramodule("Processors/" + root, deps + slas)
+
+
+for m in glob("Ghidra/Processors/*"):
+    if exists(m + "/build.gradle"):
+        ghidraprocessor(basename(m))
+
+javaprogram(
+    name="ghidra", mainclass="ghidra.GhidraRun", deps=list(allmodules.values())
+)
 
 export(name="all", items={"sleigh.jar": ".+sleigh", "ghidra.jar": ".+ghidra"})
