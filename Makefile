@@ -1,6 +1,7 @@
-JAVAC = javac
+JAVAC = chronic javac
 JAVA = java
-ANTLR3 = antlr3
+ANTLR3 = chronic antlr3
+JAVACC = chronic javacc
 OBJ = .obj
 
 JFLAGS = \

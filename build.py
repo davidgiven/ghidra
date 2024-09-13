@@ -265,7 +265,7 @@ def jj(self, name, src: Target):
         outs=[f"={self.localname}.srcjar"],
         commands=[
             "mkdir -p {dir}/srcs",
-            "javacc -g -OUTPUT_DIRECTORY={dir}/srcs {ins}",
+            "$(JAVACC) -g -OUTPUT_DIRECTORY={dir}/srcs {ins}",
             "(cd {dir}/srcs && $(JAR) cf $(abspath {outs[0]}) .)",
         ],
         label="JAVACC",
@@ -290,19 +290,21 @@ javaprogram(
 
 
 def ghidraprocessor(root, deps=[]):
-    slas = []
-    for sla in glob(f"Ghidra/Processors/{root}/data/languages/*.slaspec"):
-        (n, _) = splitext(basename(sla))
-        s = simplerule(
-            name=n + "_sla",
-            ins=[".+sleigh", sla] + glob(basename(sla) + "/*.sla"),
-            outs=[f"={n}.sla"],
-            commands=["java -jar {ins[0]} {ins[1]} {outs[0]}"],
-            label="SLEIGH",
-        )
-        slas += [s]
+    path = f"Ghidra/Processors/{root}/data/languages"
+    s = simplerule(
+        name=f"{root}_sla",
+        ins=[".+sleigh"] + glob(path + "/*.{sla,slaspec}"),
+        outs=[f"={root}.srcjar"],
+        commands=[
+            "mkdir -p {dir}/srcs",
+            "chronic $(JAVA) -jar {ins[0]} -a " + path + " {dir}/srcs",
+            "(cd {dir}/srcs && $(JAR) cf $(abspath {outs[0]}) .)",
+        ],
+        label="SLEIGH",
+        traits={"srcjar"},
+    )
 
-    ghidramodule("Processors/" + root, deps + slas)
+    ghidramodule("Processors/" + root, deps + [s])
 
 
 for m in glob("Ghidra/Processors/*"):
