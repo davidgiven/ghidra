@@ -98,8 +98,6 @@ cxxprogram(
         "./cpp/xml.cc",
     ],
     cflags=[
-        #        "-DLOCAL_ZLIB",
-        #        "-DNO_GZIP",
         "-std=c++11",
         "-Wall",
         "-O2",
@@ -131,8 +129,6 @@ cxxprogram(
         "./cpp/slghscan.cc",
     ],
     cflags=[
-        #        "-DLOCAL_ZLIB",
-        #        "-DNO_GZIP",
         "-std=c++11",
         "-Wall",
         "-O2",
