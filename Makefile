@@ -5,8 +5,8 @@ JAVACC = chronic javacc
 OBJ = .obj
 
 JFLAGS = \
-	--source=23 \
-	--target=23 \
+	--source=22 \
+	--target=22 \
 	--add-exports=java.desktop/sun.awt=ALL-UNNAMED \
 	-nowarn \
 	-proc:full \
