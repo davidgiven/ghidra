@@ -12,6 +12,14 @@ JFLAGS = \
 	-proc:full \
 	-g \
 
+CXXFLAGS = \
+	-std=c++11 \
+	-Wall \
+	-O2 \
+	-Wno-sign-compare \
+	-DLINUX \
+	-D_LINUX
+
 .PHONY: all
 all: +all
 

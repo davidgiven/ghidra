@@ -97,14 +97,6 @@ cxxprogram(
         "./cpp/varnode.cc",
         "./cpp/xml.cc",
     ],
-    cflags=[
-        "-std=c++11",
-        "-Wall",
-        "-O2",
-        "-Wno-sign-compare",
-        "-DLINUX",
-        "-D_LINUX",
-    ],
     deps=[".+libghidra"],
 )
 
@@ -127,14 +119,6 @@ cxxprogram(
         "./cpp/pcodeparse.cc",
         "./cpp/slghparse.cc",
         "./cpp/slghscan.cc",
-    ],
-    cflags=[
-        "-std=c++11",
-        "-Wall",
-        "-O2",
-        "-Wno-sign-compare",
-        "-DLINUX",
-        "-D_LINUX",
     ],
     ldflags=["-lz"],
     deps=[".+libghidra"],
