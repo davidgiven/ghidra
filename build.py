@@ -312,7 +312,15 @@ for m in glob("Ghidra/Processors/*"):
         ghidraprocessor(basename(m))
 
 javaprogram(
-    name="ghidra", mainclass="ghidra.GhidraRun", deps=list(allmodules.values())
+    name="ghidra", mainclass="ghidra.GhidraRun", deps=allmodules.values()
 )
 
-export(name="all", items={"sleigh.jar": ".+sleigh", "ghidra.jar": ".+ghidra"})
+export(
+    name="all",
+    items={
+        "sleigh.jar": ".+sleigh",
+        "ghidra.jar": ".+ghidra",
+        "decompile": "Ghidra/Features/Decompiler/src/decompile+decompile",
+        # "sleigh": "Ghidra/Features/Decompiler/src/decompile+sleigh",
+    },
+)
