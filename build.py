@@ -7,9 +7,10 @@ from build.ab import (
     filenameof,
     filenamesof,
 )
-from build.java import javalibrary, externaljar, javaprogram
+from build.java import javalibrary, externaljar, javaprogram, javalink
 from build.utils import itemsof
 from build.protobuf import protojava, proto
+from build.zip import zip
 from os.path import *
 from glob import glob
 import re
@@ -93,10 +94,11 @@ def ghidramodule(root, deps=[]):
             root=join("Ghidra", root, "src"),
         ),
         deps=deps + moduledeps,
+        args={"modulename": root},
     )
 
     global allmodules
-    allmodules["jars/" + depname + ".jar"] = m
+    allmodules[root] = m
 
 
 ghidramodule("Framework/DB")
@@ -297,7 +299,7 @@ def ghidraprocessor(root, deps=[]):
         outs=[f"={root}.srcjar"],
         commands=[
             "mkdir -p {dir}/srcs",
-            "chronic $(JAVA) -jar {ins[0]} -a " + path + " {dir}/srcs",
+            "chronic {ins[0]} -a " + path + " {dir}/srcs",
             "(cd {dir}/srcs && $(JAR) cf $(abspath {outs[0]}) .)",
         ],
         label="SLEIGH",
@@ -311,16 +313,32 @@ for m in glob("Ghidra/Processors/*"):
     if exists(m + "/build.gradle"):
         ghidraprocessor(basename(m))
 
-javaprogram(
-    name="ghidra", mainclass="ghidra.GhidraRun", deps=allmodules.values()
+javalibrary(
+    name="launchsupport",
+    srcitems=itemsof(
+        pattern="GhidraBuild/LaunchSupport/src/main/**/*.java",
+        root="GhidraBuild/LaunchSupport",
+    ),
 )
 
 export(
     name="all",
     items={
-        "sleigh.jar": ".+sleigh",
-        "ghidra.jar": ".+ghidra",
-        "decompile": "Ghidra/Features/Decompiler/src/decompile+decompile",
+        "dist/ghidraRun": "./Ghidra/RuntimeScripts/Linux/ghidraRun",
+        "dist/support/launch.sh": "./Ghidra/RuntimeScripts/Linux/support/launch.sh",
+        "dist/support/launch.properties": "./Ghidra/RuntimeScripts/Common/support/launch.properties",
+        "dist/support/debug.log4j.xml": "./Ghidra/RuntimeScripts/Common/support/debug.log4j.xml",
+        "dist/support/LaunchSupport.jar": "+launchsupport",
+        "dist/decompile": "Ghidra/Features/Decompiler/src/decompile+decompile",
+        "dist/Ghidra/application.properties": "Ghidra/application.properties",
         # "sleigh": "Ghidra/Features/Decompiler/src/decompile+sleigh",
+    }
+    | {
+        f"dist/Ghidra/{root}/lib/{basename(root)}.jar": t
+        for root, t in allmodules.items()
+    }
+    | {
+        f"dist/Ghidra/{root}/Module.manifest": f"Ghidra/{root}/Module.manifest"
+        for root in allmodules.keys()
     },
 )
