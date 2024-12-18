@@ -32,7 +32,8 @@ old_import = builtins.__import__
 
 class PathFinderImpl(PathFinder):
     def find_spec(self, fullname, path, target=None):
-        if not path:
+        # The second test here is needed for Python 3.9.
+        if not path or not path[0]:
             path = ["."]
         if len(path) != 1:
             return None
@@ -114,7 +115,7 @@ def Rule(func):
         t.callback = func
         t.traits.add(func.__name__)
         if "args" in kwargs:
-            t.args |= kwargs["args"]
+            t.args.update(kwargs["args"])
             del kwargs["args"]
         if "traits" in kwargs:
             t.traits |= kwargs["traits"]
@@ -148,6 +149,7 @@ class Target:
         self.dir = join("$(OBJ)", name)
         self.ins = []
         self.outs = []
+        self.deps = []
         self.materialised = False
         self.args = {}
 
@@ -353,8 +355,15 @@ class TargetsMap:
         return output
 
 
+def _removesuffix(self, suffix):
+    # suffix='' should not call self[:-0].
+    if suffix and self.endswith(suffix):
+        return self[:-len(suffix)]
+    else:
+        return self[:]
+
 def loadbuildfile(filename):
-    filename = filename.replace("/", ".").removesuffix(".py")
+    filename = _removesuffix(filename.replace("/", "."), ".py")
     builtins.__import__(filename)
 
 
@@ -419,10 +428,18 @@ def emit_rule(name, ins, outs, cmds=[], label=None):
     emit(".PHONY:", name, into=lines)
     if outs:
         emit(name, ":", *fouts, into=lines)
-        emit(*fouts, "&:" if len(fouts) > 1 else ":", *fins, "\x01", into=lines)
+        if len(fouts) == 1:
+            emit(*fouts, ":", *fins, "\x01", into=lines)
+        else:
+            emit("ifeq ($(MAKE4.3),yes)", into=lines)
+            emit(*fouts, "&:", *fins, "\x01", into=lines)
+            emit("else", into=lines)
+            emit(*(fouts[1:]), ":", fouts[0], into=lines)
+            emit(fouts[0], ":", *fins, "\x01", into=lines)
+            emit("endif", into=lines)
 
         if label:
-            emit("\t$(hide)", "$(ECHO) $(PROGRESSINFO) ", label, into=lines)
+            emit("\t$(hide)", "$(ECHO) $(PROGRESSINFO)", label, into=lines)
         for c in cmds:
             emit("\t$(hide)", c, into=lines)
     else:
@@ -472,7 +489,7 @@ def simplerule(
         name=self.name,
         ins=ins + deps,
         outs=outs,
-        label=self.templateexpand("{label} {name}"),
+        label=self.templateexpand("{label} {name}") if label else None,
         cmds=cs,
     )
 
@@ -497,8 +514,8 @@ def export(self, name=None, items: TargetsMap = {}, deps: Targets = []):
             cwd=self.cwd,
             ins=[srcs[0]],
             outs=[destf],
-            commands=["cp %s %s" % (srcs[0], destf)],
-            label="CP",
+            commands=["$(CP) %s %s" % (srcs[0], destf)],
+            label="",
         )
         subrule.materialise()
 
